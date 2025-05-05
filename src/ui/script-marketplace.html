@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GhostPilot Script Marketplace</title>
+  <style>
+    body { background: #121212; color: #fff; font-family: sans-serif; padding: 20px; }
+    h1 { color: #03dac6; }
+    .script { border: 1px solid #444; padding: 10px; margin-bottom: 10px; border-radius: 6px; background: #1e1e1e; }
+    .script h3 { margin: 0; }
+    .script p { margin: 4px 0; }
+    .script button { margin-right: 8px; margin-top: 6px; background: #03dac6; color: #000; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+    input[type="file"] { margin-top: 10px; }
+    .result { font-size: 14px; margin-top: 5px; }
+  </style>
+</head>
+<body>
+<a href="index.html" style="color:#03dac6; display:inline-block; margin-bottom: 20px;">⬅ Back to Dashboard</a>\n
+  <h1>🛍️ GhostPilot Script Marketplace</h1>
+  <div id="scripts"></div>
+
+  <h3>📤 Upload New Script</h3>
+  <input type="file" id="upload" accept=".json" />
+  <button onclick="uploadScript()">Upload</button>
+
+  <script>
+    const container = document.getElementById('scripts');
+
+    async function loadScripts() {
+      const res = await fetch('../../automation/scripts.json');
+      const scripts = await res.json();
+
+      container.innerHTML = '';
+      scripts.forEach(script => {
+        const div = document.createElement('div');
+        div.className = 'script';
+        div.innerHTML = \`
+          <h3>\${script.name}</h3>
+          <p><strong>Category:</strong> \${script.category}</p>
+          <p><strong>Description:</strong> \${script.description}</p>
+          <button onclick='download("\${script.file}")'>Download</button>
+          <button onclick='runScript("\${script.file}")'>Run Now</button>
+          <button onclick='validateScript("\${script.file}", this)'>Validate</button>
+          <div class="result" id="result-\${script.file.replace('.json', '')}"></div>
+        \`;
+        container.appendChild(div);
+      });
+    }
+
+    function download(file) {
+      const a = document.createElement('a');
+      a.href = '../../automation/scripts/' + file;
+      a.download = file;
+      a.click();
+    }
+
+    function runScript(file) {
+      alert('📥 Queuing ' + file + ' for execution...');
+      // Post to a backend runner or task queue system (future)
+    }
+
+    async function validateScript(file, button) {
+      const resultId = "result-" + file.replace(".json", "");
+      const out = document.getElementById(resultId);
+
+      try {
+        const res = await fetch('../../automation/scripts/' + file);
+        const json = await res.json();
+        let valid = true;
+        const requiredFields = ["type"];
+
+        for (let i = 0; i < json.length; i++) {
+          const step = json[i];
+          if (!requiredFields.every(f => f in step)) {
+            valid = false;
+            out.textContent = "❌ Invalid step at index " + i + ": Missing required field(s)";
+            out.style.color = "red";
+            return;
+          }
+        }
+        out.textContent = "✅ Script is valid";
+        out.style.color = "limegreen";
+      } catch (err) {
+        out.textContent = "❌ Failed to load script";
+        out.style.color = "red";
+      }
+    }
+
+    function uploadScript() {
+      const input = document.getElementById('upload');
+      const file = input.files[0];
+      if (!file) return alert('Choose a JSON file first');
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const content = reader.result;
+        const newScript = {
+          name: file.name.replace('.json', ''),
+          file: file.name,
+          category: 'Custom',
+          description: 'User uploaded automation script'
+        };
+
+        fetch('../../automation/scripts.json')
+          .then(res => res.json())
+          .then(data => {
+            data.push(newScript);
+            return fetch('../../automation/scripts.json', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data, null, 2)
+            });
+          }).then(() => {
+            const blob = new Blob([content], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = file.name;
+            link.click();
+            loadScripts();
+          });
+      };
+      reader.readAsText(file);
+    }
+
+    loadScripts();
+  </script>
+</body>
+</html>

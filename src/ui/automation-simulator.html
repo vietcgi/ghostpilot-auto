@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Automation Simulator - GhostPilot</title>
+  <style>
+    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
+    h1 { color: #03dac6; }
+    select, textarea, button {
+      width: 100%; margin-top: 10px; padding: 10px;
+      border-radius: 5px; background: #1e1e1e; border: 1px solid #333; color: #fff;
+    }
+    button { background: #03dac6; color: #000; cursor: pointer; margin-top: 20px; }
+    pre { background: #1a1a1a; padding: 10px; border-radius: 6px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+<a href="index.html" style="color:#03dac6; display:inline-block; margin-bottom: 20px;">⬅ Back to Dashboard</a>\n
+  <h1>🎬 Automation Simulator</h1>
+
+  <label>Select a Script:</label>
+  <select id="scriptSelect" onchange="loadScript()"></select>
+
+  <h3>Step-by-Step Preview:</h3>
+  <div id="previewSteps"></div>
+
+  <script>
+    async function loadScriptList() {
+      const res = await fetch('../../automation/scripts.json');
+      const scripts = await res.json();
+      const select = document.getElementById('scriptSelect');
+      scripts.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.file;
+        opt.textContent = s.name;
+        select.appendChild(opt);
+      });
+    }
+
+    async function loadScript() {
+      const file = document.getElementById('scriptSelect').value;
+      const res = await fetch('../../automation/scripts/' + file);
+      const steps = await res.json();
+      const preview = document.getElementById('previewSteps');
+      preview.innerHTML = '';
+      steps.forEach((step, i) => {
+        const block = document.createElement('pre');
+        block.textContent = 'Step ' + (i + 1) + ':\n' + JSON.stringify(step, null, 2);
+        preview.appendChild(block);
+      });
+    }
+
+    loadScriptList();
+  </script>
+</body>
+</html>

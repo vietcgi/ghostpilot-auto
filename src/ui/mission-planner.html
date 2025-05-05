@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mission Planner - GhostPilot</title>
+  <style>
+    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
+    h1 { color: #03dac6; }
+    label, select, button, input { margin: 6px 0; padding: 8px; border-radius: 4px; border: 1px solid #444; background: #1e1e1e; color: #fff; }
+    button { background: #03dac6; color: #000; cursor: pointer; }
+    .block { margin-bottom: 12px; }
+    #missions { margin-top: 20px; }
+  </style>
+</head>
+<body>
+<a href="index.html" style="color:#03dac6; display:inline-block; margin-bottom: 20px;">⬅ Back to Dashboard</a>\n
+  <h1>🎯 Mission Planner</h1>
+
+  <div class="block">
+    <label>Mission Name:</label>
+    <input type="text" id="missionName" placeholder="e.g. Gmail + Lead Export + Notify" />
+  </div>
+
+  <div class="block">
+    <label>Add Script Step:</label>
+    <select id="scriptPicker"></select>
+    <button onclick="addStep()">➕ Add to Mission</button>
+  </div>
+
+  <div class="block">
+    <label>Steps:</label>
+    <ol id="stepList"></ol>
+  </div>
+
+  <button onclick="saveMission()">💾 Save Mission</button>
+
+  <script>
+    let steps = [];
+
+    function addStep() {
+      const script = document.getElementById('scriptPicker').value;
+      steps.push(script);
+      renderSteps();
+    }
+
+    function renderSteps() {
+      const list = document.getElementById('stepList');
+      list.innerHTML = '';
+      steps.forEach((step, i) => {
+        const li = document.createElement('li');
+        li.textContent = step;
+        list.appendChild(li);
+      });
+    }
+
+    function saveMission() {
+      const name = document.getElementById('missionName').value;
+      if (!name || steps.length === 0) return alert('Mission needs a name and at least 1 step');
+
+      const mission = { name, steps };
+      fetch('../../automation/missions.json')
+        .then(res => res.json())
+        .then(data => {
+          data.push(mission);
+          return fetch('../../automation/missions.json', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data, null, 2)
+          });
+        }).then(() => {
+          alert('✅ Mission saved');
+          steps = [];
+          renderSteps();
+        });
+    }
+
+    async function loadScripts() {
+      const res = await fetch('../../automation/scripts.json');
+      const scripts = await res.json();
+      const select = document.getElementById('scriptPicker');
+      scripts.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.file;
+        opt.textContent = s.name;
+        select.appendChild(opt);
+      });
+    }
+
+    loadScripts();
+  </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GhostPilot Marketplace Hub</title>
+  <style>
+    body { background: #121212; color: #fff; font-family: sans-serif; padding: 30px; }
+    h1 { color: #03dac6; }
+    .card {
+      background: #1f1f1f;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    h2 { color: #03dac6; margin-top: 0; }
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      background: #03dac6;
+      border: none;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+<div style="background:#1e1e1e; padding:12px 20px; border-bottom:1px solid #333;">
+  <a href="index.html" style="color:#03dac6; font-weight:bold; text-decoration:none;">⬅ Back to Dashboard</a>
+</div>
+
+  <h1>🛒 GhostPilot Flow Marketplace</h1>
+
+  <div class="card">
+    <h2>📩 Gmail Account Checker</h2>
+    <p>Logs in and checks unread count. Auto-screenshots. Built-in stealth. ✅</p>
+    <button onclick="install('gmail-checker')">📥 Install</button>
+  </div>
+
+  <div class="card">
+    <h2>🔗 Hotmail Login + Scrape</h2>
+    <p>Logs in, scrapes inbox headers, stores locally. Fingerprint rotated.</p>
+    <button onclick="install('hotmail-scrape')">📥 Install</button>
+  </div>
+
+  <div class="card">
+    <h2>👥 Facebook Friend List Extractor</h2>
+    <p>Loads FB profile, extracts visible friends, writes to CSV.</p>
+    <button onclick="install('fb-friends')">📥 Install</button>
+  </div>
+
+  <script>
+    function install(id) {
+      alert('✅ Installed flow: ' + id + '\n(For demo purposes only)');
+    }
+  </script>
+</body>
+</html>

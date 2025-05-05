@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GhostPilot Login</title>
+  <style>
+    body { background: #1c1c1c; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+    .box { background: #2a2a2a; padding: 20px; border-radius: 10px; width: 300px; box-shadow: 0 0 10px #000; }
+    input, button { width: 100%; padding: 10px; margin: 8px 0; border: none; border-radius: 6px; }
+    button { background: #03dac6; color: #000; cursor: pointer; }
+  </style>
+</head>
+<body>
+<a href="index.html" style="color:#03dac6; display:inline-block; margin-bottom: 20px;">⬅ Back to Dashboard</a>\n
+  <div class="box">
+    <h2>GhostPilot Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    async function login() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+
+      const response = await fetch('../../profiles/users.json');
+      const data = await response.json();
+
+      if (data[user] && data[user].password === pass) {
+        localStorage.setItem('user', user);
+        window.location.href = 'index.html';
+      } else {
+        document.getElementById('msg').textContent = "Invalid credentials";
+      }
+    }
+  </script>
+</body>
+</html>

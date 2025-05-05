@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fingerprint Stealth Scores</title>
+  <style>
+    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
+    h1 { color: #03dac6; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; border: 1px solid #333; text-align: left; }
+    th { background-color: #1e1e1e; }
+    .low { color: red; }
+    .med { color: orange; }
+    .high { color: #03dac6; }
+  </style>
+</head>
+<body>
+<a href="index.html" style="color:#03dac6; display:inline-block; margin-bottom: 20px;">⬅ Back to Dashboard</a>\n
+  <h1>🔍 Fingerprint Stealth Score Dashboard</h1>
+  <table id="scoreTable">
+    <thead>
+      <tr><th>User-Agent</th><th>Lang</th><th>Resolution</th><th>Timezone</th><th>Score</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    fetch('../../logs/fingerprint-scores.json')
+      .then(res => res.json())
+      .then(data => {
+        const table = document.querySelector('#scoreTable tbody');
+        data.forEach(fp => {
+          const row = document.createElement('tr');
+          const cls = fp.stealthScore >= 80 ? 'high' : fp.stealthScore >= 50 ? 'med' : 'low';
+          row.innerHTML = \`
+            <td>\${fp.userAgent}</td>
+            <td>\${fp.language}</td>
+            <td>\${fp.screen.width}x\${fp.screen.height}</td>
+            <td>\${fp.timezone}</td>
+            <td class="\${cls}">\${fp.stealthScore}</td>
+          \`;
+          table.appendChild(row);
+        });
+      });
+  </script>
+</body>
+</html>

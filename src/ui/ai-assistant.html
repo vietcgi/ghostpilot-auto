@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GhostPilot AI Assistant</title>
+  <style>
+    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
+    textarea, button { width: 100%; padding: 10px; margin-top: 10px; font-size: 16px; }
+    textarea { height: 120px; background: #1e1e1e; color: #fff; border: 1px solid #444; }
+    button { background: #03dac6; border: none; cursor: pointer; }
+    pre { background: #1e1e1e; color: #0f0; padding: 10px; white-space: pre-wrap; border-radius: 6px; }
+    .nav { margin-bottom: 20px; }
+    a { color: #03dac6; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="nav"><a href="index.html">&larr; Back to Dashboard</a></div>
+  <h1>🧠 GhostPilot AI Script Assistant</h1>
+  <p>Describe what you want to automate (e.g., "Go to Gmail, log in, wait 5 seconds, take screenshot")</p>
+  <textarea id="input" placeholder="Type your task here..."></textarea>
+  <button onclick="generate()">Generate Script</button>
+  <button onclick="download()">Export JSON</button>
+  <h3>Generated Automation JSON:</h3>
+  <pre id="output">{}</pre>
+
+  <script>
+    let generated = [];
+
+    function generate() {
+      const input = document.getElementById('input').value.toLowerCase();
+      const output = [];
+
+      if (input.includes("go to") || input.includes("navigate to")) {
+        const match = input.match(/go to|navigate to (https?:\/\/[^\s]+)/);
+        if (match) output.push({ type: "goto", url: match[1] });
+      }
+      if (input.includes("log in") || input.includes("login")) {
+        output.push({ type: "type", selector: "#email", value: "{{email}}" });
+        output.push({ type: "type", selector: "#pass", value: "{{password}}" });
+        output.push({ type: "click", selector: "[name='login']" });
+        output.push({ type: "wait", seconds: 5 });
+      }
+      if (input.includes("wait")) {
+        const match = input.match(/wait (\d+) seconds?/);
+        if (match) output.push({ type: "wait", seconds: parseInt(match[1]) });
+      }
+      if (input.includes("screenshot")) {
+        output.push({ type: "screenshot", path: "auto-screenshot.png" });
+      }
+
+      generated = output;
+      document.getElementById('output').textContent = JSON.stringify(output, null, 2);
+    }
+
+    function download() {
+      const blob = new Blob([JSON.stringify(generated, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'generated-automation.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

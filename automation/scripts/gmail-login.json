@@ -1,0 +1,36 @@
+[
+  {
+    "type": "goto",
+    "url": "https://mail.google.com"
+  },
+  {
+    "type": "type",
+    "selector": "input[type=email]",
+    "value": "{{email}}"
+  },
+  {
+    "type": "click",
+    "selector": "#identifierNext"
+  },
+  {
+    "type": "wait",
+    "seconds": 2
+  },
+  {
+    "type": "type",
+    "selector": "input[type=password]",
+    "value": "{{password}}"
+  },
+  {
+    "type": "click",
+    "selector": "#passwordNext"
+  },
+  {
+    "type": "wait",
+    "seconds": 5
+  },
+  {
+    "type": "screenshot",
+    "path": "gmail-login.png"
+  }
+]

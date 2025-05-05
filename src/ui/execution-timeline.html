@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Execution Timeline - GhostPilot</title>
+  <style>
+    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
+    h1 { color: #03dac6; }
+    .timeline { border-left: 4px solid #03dac6; padding-left: 10px; margin-top: 20px; }
+    .entry { margin-bottom: 20px; padding-left: 10px; }
+    .entry h3 { margin: 0; font-size: 18px; color: #03dac6; }
+    .entry p { margin: 5px 0; }
+    .entry time { font-size: 13px; color: #ccc; }
+    .success { color: limegreen; }
+    .fail { color: red; }
+  </style>
+</head>
+<body>
+<a href="index.html" style="color:#03dac6; display:inline-block; margin-bottom: 20px;">⬅ Back to Dashboard</a>\n
+  <h1>📈 Automation Execution Timeline</h1>
+
+  <div class="timeline" id="timeline"></div>
+
+  <script>
+    async function loadLogs() {
+      const res = await fetch('../../logs/execution-log.json');
+      const data = await res.json();
+      const container = document.getElementById('timeline');
+
+      data.reverse().forEach(entry => {
+        const div = document.createElement('div');
+        div.className = 'entry';
+        div.innerHTML = \`
+          <h3>\${entry.scriptName}</h3>
+          <time>\${entry.timestamp}</time>
+          <p>Status: <span class="\${entry.status === 'success' ? 'success' : 'fail'}">\${entry.status}</span></p>
+          <p>Profile: \${entry.profile}</p>
+          <p>Steps: \${entry.steps.length}</p>
+        \`;
+        container.appendChild(div);
+      });
+    }
+
+    loadLogs();
+  </script>
+</body>
+</html>

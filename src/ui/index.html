@@ -1,11 +1,59 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>GhostPilot Auto</title>
+  <meta charset="UTF-8" />
+  <title>GhostPilot OS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>GhostPilot Auto</h1>
-  <button onclick="window.electronAPI.launchProfile('default')">Launch Profile</button>
+<body class="bg-zinc-900 text-white font-sans h-screen overflow-hidden">
+
+  <div class="flex h-full">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-zinc-800 p-5 flex flex-col">
+      <h1 class="text-2xl font-bold text-cyan-400 mb-6">🕶 GhostPilot OS</h1>
+      <nav class="flex-1">
+        <ul class="space-y-4 text-lg">
+          <li><a href="index.html" class="hover:text-cyan-300">🏠 Dashboard</a></li>
+          <li><a href="flow-composer.html" class="hover:text-cyan-300">🧱 Script Builder</a></li>
+          <li><a href="mission-planner.html" class="hover:text-cyan-300">🎯 Mission Planner</a></li>
+          <li><a href="fingerprint-editor.html" class="hover:text-cyan-300">🎭 Fingerprint Editor</a></li>
+          <li><a href="ghost-analytics.html" class="hover:text-cyan-300">📊 Analytics</a></li>
+          <li><a href="plugin-marketplace.html" class="hover:text-cyan-300">🔌 Plugin Marketplace</a></li>
+          <li><a href="ghostpilot-university.html" class="hover:text-cyan-300">🎓 University</a></li>
+        </ul>
+      </nav>
+      <footer class="text-sm text-zinc-400 mt-8">
+        v1.0 — Stealth is Power.
+      </footer>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-10 overflow-auto">
+      <div class="text-xl font-semibold text-cyan-300 mb-4">🚀 Welcome to GhostPilot OS</div>
+      <p class="text-zinc-300 text-lg mb-6">Choose a tool from the left to get started.</p>
+
+      <div class="grid grid-cols-2 gap-6">
+        <a href="flow-composer.html" class="bg-zinc-800 p-6 rounded-lg hover:bg-cyan-900 transition">
+          <h2 class="text-cyan-400 text-xl font-bold">🧱 Script Builder</h2>
+          <p class="text-zinc-300">Visually design automation flows using Blockly blocks.</p>
+        </a>
+        <a href="fingerprint-editor.html" class="bg-zinc-800 p-6 rounded-lg hover:bg-cyan-900 transition">
+          <h2 class="text-cyan-400 text-xl font-bold">🎭 Fingerprint Editor</h2>
+          <p class="text-zinc-300">Create and tweak stealth browser fingerprints.</p>
+        </a>
+        <a href="ghost-analytics.html" class="bg-zinc-800 p-6 rounded-lg hover:bg-cyan-900 transition">
+          <h2 class="text-cyan-400 text-xl font-bold">📊 Analytics</h2>
+          <p class="text-zinc-300">Track automation performance and stealth score trends.</p>
+        </a>
+        <a href="plugin-marketplace.html" class="bg-zinc-800 p-6 rounded-lg hover:bg-cyan-900 transition">
+          <h2 class="text-cyan-400 text-xl font-bold">🔌 Plugin Marketplace</h2>
+          <p class="text-zinc-300">Install modules to extend GhostPilot functionality.</p>
+        </a>
+      </div>
+    </main>
+  </div>
+
 </body>
 </html>

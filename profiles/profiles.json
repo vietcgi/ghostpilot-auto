@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Profile A",
+    "group": "Marketing",
+    "proxy": "192.168.0.1:8080",
+    "fingerprint": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/113.0.0.0 Safari/537.36",
+      "language": "en-US",
+      "timezone": "America/New_York",
+      "screen": {
+        "width": 1920,
+        "height": 1080
+      },
+      "plugins": [
+        "PDF Viewer",
+        "Chrome PDF Plugin",
+        "WebGL"
+      ]
+    }
+  },
+  {
+    "name": "Profile B",
+    "group": "Testing",
+    "proxy": "192.168.0.2:8080",
+    "fingerprint": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/113.0.0.0 Safari/537.36",
+      "language": "en-US",
+      "timezone": "America/New_York",
+      "screen": {
+        "width": 1920,
+        "height": 1080
+      },
+      "plugins": [
+        "PDF Viewer",
+        "Chrome PDF Plugin",
+        "WebGL"
+      ]
+    }
+  },
+  {
+    "name": "Profile C",
+    "group": "Marketing",
+    "proxy": "192.168.0.3:8080",
+    "fingerprint": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/113.0.0.0 Safari/537.36",
+      "language": "en-US",
+      "timezone": "America/New_York",
+      "screen": {
+        "width": 1920,
+        "height": 1080
+      },
+      "plugins": [
+        "PDF Viewer",
+        "Chrome PDF Plugin",
+        "WebGL"
+      ]
+    }
+  }
+]

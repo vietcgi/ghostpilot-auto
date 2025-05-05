@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Gmail Auto Login",
+    "file": "gmail-login.json",
+    "category": "Email",
+    "description": "Logs into Gmail with stored credentials and captures a screenshot."
+  }
+]

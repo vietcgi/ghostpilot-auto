@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flow Scheduler - GhostPilot</title>
+  <style>
+    body { background: #121212; color: #fff; font-family: sans-serif; padding: 30px; }
+    h1 { color: #03dac6; }
+    label, select, input { display: block; margin-top: 10px; background: #1e1e1e; color: #fff; padding: 10px; border-radius: 5px; width: 300px; }
+    button { margin-top: 20px; background: #03dac6; color: #000; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+<div style="background:#1e1e1e; padding:12px 20px; border-bottom:1px solid #333;">
+  <a href="index.html" style="color:#03dac6; font-weight:bold; text-decoration:none;">⬅ Back to Dashboard</a>
+</div>
+
+  <h1>🗓️ Flow Scheduler</h1>
+  <form id="scheduleForm">
+    <label for="script">Select Script</label>
+    <select id="script"></select>
+
+    <label for="time">Time (24h)</label>
+    <input type="time" id="time" required />
+
+    <label for="frequency">Frequency</label>
+    <select id="frequency">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+
+    <button type="submit">✅ Schedule Task</button>
+  </form>
+
+  <script>
+    async function loadScripts() {
+      const res = await fetch('../../automation/scripts.json');
+      const scripts = await res.json();
+      const select = document.getElementById('script');
+      scripts.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.name;
+        opt.textContent = s.name;
+        select.appendChild(opt);
+      });
+    }
+
+    document.getElementById('scheduleForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const task = {
+        script: document.getElementById('script').value,
+        time: document.getElementById('time').value,
+        frequency: document.getElementById('frequency').value
+      };
+      console.log('📆 Task Scheduled:', task);
+      alert('✅ Flow scheduled. (Simulated)');
+    });
+
+    loadScripts();
+  </script>
+</body>
+</html>

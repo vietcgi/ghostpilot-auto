@@ -1,22 +1,37 @@
 
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
+const { spawn } = require('child_process');
 
-function createWindow () {
-  const win = new BrowserWindow({
-    width: 1000,
-    height: 700,
+function createWindow() {
+  const mainWindow = new BrowserWindow({
+    width: 1280,
+    height: 800,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      contextIsolation: true,
-      nodeIntegration: false
-    }
+      nodeIntegration: true,
+      contextIsolation: false
+    },
+    icon: path.join(__dirname, 'icon.png')
   });
 
-  win.loadFile('src/ui/index.html');
+  // Load root instead of /login
+  setTimeout(() => {
+    mainWindow.loadURL('http://localhost:4000/');
+  }, 1500);
+}
+
+// Launch backend server
+function launchServer() {
+  const server = spawn('node', ['server/app.js'], {
+    cwd: __dirname,
+    shell: true,
+    stdio: 'inherit'
+  });
+  console.log('🔧 Backend server starting...');
 }
 
 app.whenReady().then(() => {
+  launchServer();
   createWindow();
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

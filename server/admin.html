@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GhostPilot Admin - Profile Manager</title>
+  <style>
+    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
+    h1 { color: #03dac6; }
+    nav a {
+      margin-right: 20px; color: #03dac6; text-decoration: none;
+      font-weight: bold; font-size: 16px;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; border: 1px solid #333; }
+    th { background-color: #1e1e1e; }
+    input, button {
+      padding: 8px; font-size: 14px;
+      margin: 6px 0; border-radius: 4px;
+      background: #1e1e1e; border: 1px solid #444; color: #fff;
+    }
+    button { background: #03dac6; color: #000; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="admin.html">Profiles</a>
+    <a href="user-dashboard.html">Users</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="testing.html">Testing Tools</a>
+    <a href="ai-assistant.html">AI Assistant</a>
+    <a href="fingerprint-dashboard.html">Fingerprint Scores</a>
+    <a href="script-marketplace.html">Script Marketplace</a>
+  </nav>
+  <h1>🌐 GhostPilot Admin: Profile Manager</h1>
+  <table id="profileTable">
+    <thead>
+      <tr><th>Name</th><th>Email</th><th>Password</th><th>Proxy</th><th>Action</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h3>Add or Edit Profile</h3>
+  <input type="text" id="name" placeholder="Profile ID (must be unique)" />
+  <input type="text" id="email" placeholder="Email" />
+  <input type="text" id="password" placeholder="Password" />
+  <input type="text" id="proxy" placeholder="Proxy (optional)" />
+  <button onclick="saveProfile()">Save Profile</button>
+
+  <script>
+    const api = 'http://localhost:4000/api';
+
+    async function fetchProfiles() {
+      const res = await fetch(api + '/profiles');
+      const encrypted = (await res.json()).data;
+      const decode = atob(encrypted);
+      const json = JSON.parse(decode.substring(0, decode.length - decode.charCodeAt(decode.length - 1)));
+      const tbody = document.querySelector('#profileTable tbody');
+      tbody.innerHTML = '';
+      Object.entries(json).forEach(([key, p]) => {
+        const row = document.createElement('tr');
+        row.innerHTML = \`
+          <td>\${p.name}</td>
+          <td>\${p.email}</td>
+          <td>\${p.password}</td>
+          <td>\${p.proxy}</td>
+          <td>
+            <button onclick="loadProfile('\${p.name}', '\${p.email}', '\${p.password}', '\${p.proxy}')">Edit</button>
+            <button onclick="launch('\${p.name}')">Launch</button>
+            <button onclick="deleteProfile('\${p.name}')">Delete</button>
+          </td>
+        \`;
+        tbody.appendChild(row);
+      });
+    }
+
+    function loadProfile(name, email, password, proxy) {
+      document.getElementById('name').value = name;
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = password;
+      document.getElementById('proxy').value = proxy || '';
+    }
+
+    function launch(name) {
+      fetch(api + '/launch-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profileId: name })
+      }).then(() => alert('Launch triggered'));
+    }
+
+    function saveProfile() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const proxy = document.getElementById('proxy').value;
+
+      fetch(api + '/save-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, proxy })
+      })
+      .then(res => res.json())
+      .then(() => fetchProfiles());
+    }
+
+    function deleteProfile(name) {
+      fetch(api + '/delete-profile/' + name, {
+        method: 'DELETE'
+      })
+      .then(() => fetchProfiles());
+    }
+
+    fetchProfiles();
+  </script>
+</body>
+</html>

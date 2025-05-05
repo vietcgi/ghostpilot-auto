@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add New Profile - GhostPilot</title>
+  <style>
+    body { background: #121212; color: #fff; font-family: sans-serif; padding: 30px; }
+    input, select {
+      width: 400px; padding: 10px; margin-top: 10px; display: block;
+      background: #1f1f1f; color: #fff; border: none; border-radius: 5px;
+    }
+    button {
+      margin-top: 20px;
+      background: #03dac6; color: #000; padding: 10px 20px;
+      border: none; border-radius: 5px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div style="background:#1e1e1e; padding:12px 20px; border-bottom:1px solid #333;">
+    <a href="index.html" style="color:#03dac6; font-weight:bold; text-decoration:none;">⬅ Back to Dashboard</a>
+  </div>
+
+  <h1>👤 Add New Ghost Profile</h1>
+
+  <form id="profileForm">
+    <label>Profile Name</label>
+    <input type="text" id="name" required />
+
+    <label>Select Proxy</label>
+    <select id="proxySelect"></select>
+    <input type="text" id="proxyCustom" placeholder="(Or enter new proxy IP:Port)" />
+
+    <label>User Agent</label>
+    <input type="text" id="ua" placeholder="Mozilla/5.0 ..." />
+
+    <label>Timezone</label>
+    <input type="text" id="tz" placeholder="America/New_York" />
+
+    <label>Resolution</label>
+    <input type="text" id="res" placeholder="1920x1080" />
+
+    <label>Group</label>
+    <select id="groupSelect"></select>
+    <input type="text" id="groupCustom" placeholder="(Or enter new group name)" />
+
+    <button type="submit">➕ Add Profile</button>
+  </form>
+
+  <script>
+    async function loadGroups() {
+      const res = await fetch('/groups');
+      const groups = await res.json();
+      const select = document.getElementById('groupSelect');
+      groups.forEach(g => {
+        const opt = document.createElement('option');
+        opt.value = g;
+        opt.textContent = g;
+        select.appendChild(opt);
+      });
+    }
+
+    async function loadProxies() {
+      const res = await fetch('/proxies');
+      const proxies = await res.json();
+      const select = document.getElementById('proxySelect');
+      proxies.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.host;
+        opt.textContent = p.host;
+        select.appendChild(opt);
+      });
+    }
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const proxy = document.getElementById('proxyCustom').value || document.getElementById('proxySelect').value;
+      const group = document.getElementById('groupCustom').value || document.getElementById('groupSelect').value;
+
+      const profile = {
+        name: document.getElementById('name').value,
+        proxy,
+        userAgent: document.getElementById('ua').value,
+        timezone: document.getElementById('tz').value,
+        screen: {
+          width: parseInt(document.getElementById('res').value.split('x')[0]),
+          height: parseInt(document.getElementById('res').value.split('x')[1])
+        },
+        group
+      };
+
+      const res = await fetch('/add-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile)
+      });
+
+      if (res.ok) {
+        alert('✅ Profile added successfully!');
+        window.location.href = 'index.html';
+      } else {
+        alert('❌ Failed to save profile.');
+      }
+    });
+
+    loadGroups();
+    loadProxies();
+  </script>
+</body>
+</html>

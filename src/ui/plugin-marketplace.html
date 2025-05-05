@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Plugin Marketplace - GhostPilot</title>
+  <style>
+    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
+    h1 { color: #03dac6; }
+    .plugin { border: 1px solid #444; background: #1e1e1e; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    .plugin h3 { margin: 0; }
+    .plugin p { margin: 4px 0; }
+    .plugin button { background: #03dac6; border: none; padding: 6px 12px; color: #000; cursor: pointer; border-radius: 4px; }
+  </style>
+</head>
+<body>
+<a href="index.html" style="color:#03dac6; display:inline-block; margin-bottom: 20px;">⬅ Back to Dashboard</a>\n
+  <h1>🔌 GhostPilot Plugin Marketplace</h1>
+  <div id="pluginList"></div>
+
+  <script>
+    const plugins = [
+      {
+        name: "Telegram Task Trigger",
+        desc: "Enable Telegram-based script control.",
+        file: "telegram-bot.js"
+      },
+      {
+        name: "Stealth Enhancer",
+        desc: "Auto-adjust userAgent and screen sizes randomly.",
+        file: "stealth-enhancer.js"
+      },
+      {
+        name: "Auto Screenshot Logger",
+        desc: "Capture screenshot after every click.",
+        file: "click-screenshot.js"
+      }
+    ];
+
+    function installPlugin(file) {
+      alert("📦 Plugin '" + file + "' installed!\n(Manually copy to /plugins to activate.)");
+    }
+
+    const container = document.getElementById('pluginList');
+    plugins.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'plugin';
+      div.innerHTML = \`
+        <h3>\${p.name}</h3>
+        <p>\${p.desc}</p>
+        <button onclick="installPlugin('\${p.file}')">📥 Install</button>
+      \`;
+      container.appendChild(div);
+    });
+  </script>
+</body>
+</html>

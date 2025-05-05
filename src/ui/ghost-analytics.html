@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GhostAnalytics Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
+    h1 { color: #03dac6; }
+    canvas { margin-top: 30px; background: #1e1e1e; padding: 20px; border-radius: 10px; }
+  </style>
+</head>
+<body>
+<a href="index.html" style="color:#03dac6; display:inline-block; margin-bottom: 20px;">⬅ Back to Dashboard</a>\n
+  <h1>📊 GhostAnalytics Dashboard</h1>
+  <canvas id="scriptChart" width="800" height="300"></canvas>
+  <canvas id="stealthChart" width="800" height="300"></canvas>
+
+  <script>
+    async function loadData() {
+      const res = await fetch('../../logs/execution-log.json');
+      const logs = await res.json();
+
+      const byScript = {};
+      const stealthScores = [];
+
+      logs.forEach(log => {
+        byScript[log.scriptName] = (byScript[log.scriptName] || 0) + 1;
+        if (log.score !== undefined) stealthScores.push(log.score);
+      });
+
+      const scriptNames = Object.keys(byScript);
+      const runCounts = Object.values(byScript);
+
+      new Chart(document.getElementById("scriptChart"), {
+        type: 'bar',
+        data: {
+          labels: scriptNames,
+          datasets: [{
+            label: 'Executions per Script',
+            data: runCounts
+          }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: 'white' } } },
+          scales: {
+            x: { ticks: { color: 'white' } },
+            y: { ticks: { color: 'white' } }
+          }
+        }
+      });
+
+      new Chart(document.getElementById("stealthChart"), {
+        type: 'line',
+        data: {
+          labels: stealthScores.map((_, i) => i + 1),
+          datasets: [{
+            label: 'Stealth Score (if available)',
+            data: stealthScores
+          }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: 'white' } } },
+          scales: {
+            x: { ticks: { color: 'white' } },
+            y: { ticks: { color: 'white' } }
+          }
+        }
+      });
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
